@@ -113,7 +113,6 @@ class KotlinPrecondition(onFail: PreconditionContainer.FailOption?,
 
 	fun customPrecondition(className: String, params: ((KotlinParameterWrapper).() -> Unit)? = null) {
 		val precondition = CustomPreconditionWrapper().apply {
-			this.classLoader = this@KotlinPrecondition.javaClass.classLoader
 			this.className = className.eval()
 		}
 
@@ -121,7 +120,7 @@ class KotlinPrecondition(onFail: PreconditionContainer.FailOption?,
 			val wrapper = KotlinParameterWrapper(databaseChangeLog)
 			wrapper.params()
 
-			wrapper.params.forEach { name, value ->
+			wrapper.params.forEach { (name, value) ->
 				precondition.setParam(name, value)
 			}
 		}

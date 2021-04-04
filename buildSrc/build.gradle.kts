@@ -8,8 +8,6 @@ repositories {
 }
 
 dependencies {
-    val bintrayPluginVersion: String by project
-    implementation("com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintrayPluginVersion")
     implementation(kotlin("gradle-plugin"))
 }
 

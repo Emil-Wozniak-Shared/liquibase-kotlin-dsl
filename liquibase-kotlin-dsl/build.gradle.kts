@@ -4,5 +4,5 @@ plugins {
 
 dependencies {
     api(project(":script-definition"))
-    implementation("org.liquibase:liquibase-core:3.10.2")
+    implementation("org.liquibase:liquibase-core:4.3.1")
 }

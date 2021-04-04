@@ -2,12 +2,15 @@ import org.gradle.api.publish.maven.internal.publication.DefaultMavenPom
 
 plugins {
     kotlin("jvm")
+    kotlin("kapt")
     `maven-publish`
-    id("com.jfrog.bintray")
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
+    val autoServiceVersion: String by project
+    kapt("com.google.auto.service:auto-service:$autoServiceVersion")
+    compileOnly("com.google.auto.service:auto-service-annotations:$autoServiceVersion")
 }
 
 tasks.register<Jar>("sourcesJar") {
@@ -51,30 +54,13 @@ publishing {
     }
     repositories {
         mavenLocal()
-    }
-}
-
-bintray {
-    val bintrayUser: String? by project
-    val bintrayPassword: String? by project
-    user = bintrayUser
-    key = bintrayPassword
-    setPublications("maven")
-    publish = true
-    pkg.apply {
-        repo = "maven"
-        afterEvaluate {
-            val pom = (publishing.publications["maven"] as MavenPublication).pom as DefaultMavenPom
-            this@apply.name = pom.name.get()
-            websiteUrl = pom.url.get()
-            vcsUrl = pom.scm.url.get()
-            setLicenses(*pom.licenses.map { it.name.get() }.toTypedArray())
-            desc = pom.description.get()
-        }
-        publicDownloadNumbers = true
-        version.apply {
-            name = project.version.toString()
+        maven {
+            name = "GithubPackages"
+            url = uri("https://maven.pkg.github.com/F43nd1r/liquibase-kotlin-dsl")
+            credentials {
+                username = project.findProperty("githubUser") as? String ?: ""
+                password = project.findProperty("githubPackageKey") as? String ?: ""
+            }
         }
     }
 }
-tasks["publish"].dependsOn("bintrayUpload")

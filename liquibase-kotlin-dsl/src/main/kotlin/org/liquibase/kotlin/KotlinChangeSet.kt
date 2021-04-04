@@ -481,7 +481,6 @@ class KotlinChangeSet(
 
 	fun customChange(className: String, params: ((KotlinParameterWrapper).() -> Unit)? = null) {
 		val customChangeWrapper = CustomChangeWrapper().apply {
-			classLoader = this@KotlinChangeSet.javaClass.classLoader
 			setClass(className.eval())
 		}
 

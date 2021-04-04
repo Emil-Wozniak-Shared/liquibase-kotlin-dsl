@@ -1,12 +1,14 @@
 package liquibase.parser.ext
 
 import com.faendir.liquibase.ChangelogScript
+import com.google.auto.service.AutoService
 import liquibase.changelog.ChangeLogParameters
 import liquibase.changelog.DatabaseChangeLog
 import liquibase.parser.ChangeLogParser
 import liquibase.resource.ResourceAccessor
 import org.liquibase.kotlin.KotlinDatabaseChangeLog
 
+@AutoService(ChangeLogParser::class)
 @Suppress("unused")
 open class KotlinLiquibaseChangeLogParser : ChangeLogParser {
     override fun parse(physicalChangeLogLocation: String, changeLogParameters: ChangeLogParameters?, resourceAccessor: ResourceAccessor): DatabaseChangeLog {

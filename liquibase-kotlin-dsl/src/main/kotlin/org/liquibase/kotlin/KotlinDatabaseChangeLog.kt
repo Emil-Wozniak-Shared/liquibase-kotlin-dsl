@@ -49,7 +49,7 @@ class KotlinDatabaseChangeLog(databaseChangeLog: DatabaseChangeLog) : BaseObject
             databaseChangeLog.changeLogParameters.set(name, value, ctx, lbls, dbms, global, databaseChangeLog)
         } else {
             val props = Properties()
-            val propertiesAsStreams = resourceAccessor?.getResourcesAsStream(file)
+            val propertiesAsStreams = resourceAccessor?.openStreams(null, file)
                     ?: throw ChangeLogParseException("Unable to load file with properties: $file")
 
             propertiesAsStreams.forEach { stream ->

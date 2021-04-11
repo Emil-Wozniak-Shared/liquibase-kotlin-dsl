@@ -4,6 +4,8 @@ plugins {
     kotlin("jvm")
     kotlin("kapt")
     `maven-publish`
+    signing
+    id("org.jetbrains.dokka")
 }
 
 dependencies {
@@ -19,11 +21,18 @@ tasks.register<Jar>("sourcesJar") {
     archiveClassifier.set("sources")
 }
 
+tasks.register<Jar>("javadocJar") {
+    group = "documentation"
+    from(tasks["dokkaJavadoc"])
+    archiveClassifier.set("javadoc")
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
             artifact(tasks["sourcesJar"])
+            artifact(tasks["javadocJar"])
             pom {
                 name.set("liquibase-kotlin-dsl")
                 description.set("kotlin dsl plugin for liquibase")
@@ -63,4 +72,11 @@ publishing {
             }
         }
     }
+}
+
+signing {
+    val signingKey = project.findProperty("signingKey") as? String ?: System.getenv("SIGNING_KEY")
+    val signingPassword = project.findProperty("signingPassword") as? String ?: System.getenv("SIGNING_PASSWORD")
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign(publishing.publications["maven"])
 }

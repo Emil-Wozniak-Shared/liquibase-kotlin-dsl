@@ -10,12 +10,23 @@ A pluggable parser for [Liquibase](http://liquibase.org) that allows the creatio
 dependencies {
     implementation("com.faendir.liquibase:liquibase-kotlin-dsl:3.0.0")
 }
+
+// Since Kotlin 1.9 kts scripts are blocked in source root  
+// If you use Kotlin 1.9+ you need to add -Xallow-any-scripts-in-source-roots flag to your Kotlin freeCompilerArgs
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        freeCompilerArgs = listOf("-Xjsr305=strict", "-Xallow-any-scripts-in-source-roots")
+        jvmTarget = "17"
+    }
+}
 ```
 
 2. Then create your changelog file **in your source directory**, e.g. `src/main/kotlin/com/faendir/liquibase/main.changelog.kts`. Make sure your file name ends with `.changelog.kts`.
 
 Your file must end with a call to `databaseChangeLog {}`. E.g.
 ```kotlin
+package com.faendir.liquibase
+
 databaseChangeLog {
     changeSet("test-1", "f43nd1r") {
         createTable("test") {
